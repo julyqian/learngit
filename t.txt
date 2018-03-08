@@ -1,2 +1,1253 @@
-Git is a version control system.
-Git is free software.111
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title></title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/select2.css" rel="stylesheet"/>
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    
+    <style>  
+         body,html{        
+          margin:0;
+          padding:0;
+          color:#fff;
+          font-size:30px;
+          background:linear-gradient(#0E2A42,#0D2942,#0D2941,#0D2A43,#0E2A42);         
+        } 
+        h1{
+          font-size:50px;
+          width:650px;
+          height:50px;
+          margin-left: 1000px; 
+          margin-top:30px; 
+        }               
+              
+       .row2{
+         margin-top:30px;
+       }
+       [class*="part"]{
+         position:absolute;        
+       }
+       .header{ 
+          width:800px;
+          height:70px;
+          font-size:25px;
+          line-height:70px;
+          padding-left:80px;
+          margin-bottom:50px;
+          background-color:rgba(20,44,84,0.8);
+       }
+       .header_oxg,.header_oil,.header_beat{
+          width:600px;         
+       }
+       .header_stop{
+           width:480px;
+       }
+       .header_sum,.header_sum_month{
+          width:600px;
+       }
+       .header_station{
+        width:1300px;
+        text-align:center;
+       }
+       .header_alarm{
+           width:700px;
+       }
+       .product{
+          color:#65F5F3;
+          font-size:50px;
+          
+       }
+       .num{
+          font-size:40px;
+       }
+       .month,.week,.day{
+          width:300px;
+/*           height:200px; */
+          height:140px;
+          margin-left:60px;
+       }
+       
+       #chart1{
+          width:500px;
+          height:400px;
+       }
+       #chart2,#chart3{
+          width:500px;
+          height:250px;
+          margin-top:-60px;
+          margin-left:70px;
+          
+       }
+        #chart4,#chart5{        
+          width:600px;
+          height:400px; 
+          margin-left:50px;         
+        }  
+        
+   
+       #table1{
+         font-size:20px;
+         width:400px;
+         height:340px;
+         text-align:center;
+         color:#57D2FE;
+         margin-left:40px;
+         border:1px solid #57D2FE;
+       }
+       #table3,#table2,#table4{
+         font-size:25px;
+         text-align:center;
+         color:#44D3E4;         
+         background-color:#0C2A42;
+       }
+       #wrap{
+         margin-top:20px;
+       }
+       #table3 td,#table4 td{
+         padding:10px;
+       }
+       #table2 th{
+        text-align:center;
+        }              
+       #table1 th{
+          text-align:center;
+       }
+       
+     
+      #btn1{
+        position:absolute;
+        top:-10px;
+      } 
+      #btn2{
+        position:absolute;
+        
+      } 
+      
+      #welcome{
+         position:absolute;
+         bottom:-310px;
+      }
+      .radius{
+        display:block;
+        width:40px;
+        height:40px;
+        text-align:center;
+        line-height:40px;
+        border-radius:50%;
+        color:#fff;
+        background-color:#44D3E4;
+      } 
+     #welcome{
+        position:absolute;
+        bottom:30px;
+      }   
+      [class*="state"]{
+			display:inline-block;
+		    font-size:15px;	
+		    font-weight:bold;
+		    width:80px;
+		    text-align:center;
+		    border-radius:5px;
+ 		    height:50px; 
+ 		    line-height:50px;
+		    background:#5cb85c;
+ 		    position:absolute;  
+		}
+		[class*="label"]{
+			display:inline-block;
+		    font-size:20px;	
+		    font-weight:bold;
+		    z-index:2;
+		    width:50px;
+		    text-align:center;
+		    border-radius:3px;
+ 		    height:25px; 
+ 		    position:absolute;  
+		}
+		[class*="ph"]{
+			display:inline-block;
+ 			position:absolute;  
+			height:30px;
+			line-height:30px;
+			
+		}       
+    </style>
+</head>
+<body>
+  <div class="content">
+      <h1>康和科技模块装配追溯线系统</h1>
+      
+      <!--产量 -->
+      <div class="part part1" id="part1">
+           <p class="header "  style="width:400px">产量   (个)</p>
+           <div class="month">
+             <span class="product">月产量  :  </span>
+             <span class="num" id="month_product"></span>
+           </div>
+           <div class="week">
+             <span class="product">周产量  :  </span>
+             <span class="num" id="week_product"></span>
+           </div>
+           <div class="day">
+             <span class="product">日产量  :  </span>
+             <span class="num" id="day_product"></span>
+           </div>
+      </div>
+      
+      <!--最近七天产量  -->
+      <div class="part part2" id="part2">
+           <p class="header"  style="width:500px">最近七天产量</p>
+           <div class="chart" id="chart1"></div>
+      </div> 
+      
+      <!--水壳气密性检测合格率  --> 
+      <div class="part part3" id="part3">
+           <p class="header header_oxg">水壳气密性检测合格率</p>
+           <div class="chart" id="chart2"></div>
+      </div>  
+      
+      <!--油壳气密性检测合格率  -->
+      <div class="part part4" id="part4">
+           <p class="header header_oil">油壳气密性检测合格率</p>
+           <div class="chart" id="chart3"></div>
+      </div> 
+      
+      <!--最长停机时间  -->
+      <div class="part part5" id="part5">
+           <p class="header header_stop">最长停机时间</p>
+           <table border="1" id="table1">
+           </table>
+      </div> 
+      
+      <!--累计停机时间本周  --> 
+      <div class="part part6" id="part6"> 
+           <p class="header header_sum">累计停机时间(本周)</p>
+           <div class="chart" id="chart4"></div>
+      </div>
+      <!-- 工位图 -->
+      <div class="part part7" id="part7"> 
+           <p class="header header_station">工位图</p>
+            <div>
+		  	   	   <div class="state2" id="state2" >OP05配料</div>
+		  	   	   <div class="state3" id="state3" >OP06</div>
+			  	   <div class="state1" id="state1" >OP01</div>
+		  	   	   <div class="state17" id="state17" >OP140</div>
+		  	   	   <div class="state18" id="state18" >OP质检</div>
+		  	   	   <div id="label1" class="label1" style="background:#5cb85c;"></div>
+		  	   	   <div id="ph1" class="ph1">正常</div>
+			  	   <div id="label2" class="label2" style="background:#f0ad4e;"></div>
+			  	   <div id="ph2" class="ph2">维修中</div>
+			  	   <div id="label3" class="label3" style="background:#D9534F;"></div>
+			  	   <div id="ph3" class="ph3">告警</div>
+		  	   	   <div class="state4" id="state4">OP10</div>		  	   	   
+		  	   	   <div class="state16" id="state16" >OP130</div>
+		  	   	   <div class="state5" id="state5" >OP20</div>
+			   	   <div class="state15" id="state15" >OP120</div>
+			   	   <div class="state6" id="state6" >OP30</div>
+			       <div class="state14" id="state14" >OP110</div>
+			   	   <div class="state13" id="state13" >OP100</div>
+			   	   <div class="state12" id="state12" >OP90</div>
+			   	   <div class="state11" id="state11" >OP80</div>
+			   	   <div class="state10" id="state10" >OP70</div>
+			   	   <div class="state9" id="state9" >OP60</div>
+			   	   <div class="state8" id="state8" >OP50</div>
+			   	   <div class="state7" id="state7" >OP40</div>
+		</div>	   	   
+       </div>
+      <!-- 累计停机时间（本月）--> 
+      <div class="part part8" id="part8"> 
+           <p class="header header_sum_month">累计停机时间(本月)</p>
+           <div class="chart" id="chart5"></div>
+      </div>
+      
+      <!--测试（点击获取模块位置）  -->
+      <!-- <input name="btn1" id="btn1" type="button" value="随便点">  -->
+      <marquee behavior="scroll" id="welcome">欢迎莅临</marquee> 
+  </div>
+<script src="js/jquery.min.js?v=2.1.4"></script>
+<script src="js/bootstrap.min.js?v=3.3.6"></script>
+<script src="js/select2.min.js"></script>
+<script src="js/bootstrap-datetimepicker.js"></script>	
+<script src="js/echarts.common.min.js"></script>
+<script src="js/commons.js"></script>
+<script src="js/echarts.theme.js"></script>
+<script>
+
+	var now = new Date(); //当前日期 
+	var nowDayOfWeek = now.getDay()-1; //今天本周的第几天 
+	var nowDay = now.getDate(); //当前日 
+	var nowMonth = now.getMonth(); //当前月 
+	var nowYear = now.getYear(); //当前年 
+	nowYear += (nowYear < 2000) ? 1900 : 0; // 
+	
+    var ids=[{'id':'part1','x':'41','y':'154'},{'id':'part2','x':'47','y':'858'},{'id':'part3','x':'1898','y':'505'},{'id':'part4','x':'1898','y':'154'},{'id':'part5','x':'1311','y':'858'},{'id':'part6','x':'631','y':'858'},{'id':'part7','x':'530','y':'154'},{'id':'part8','x':'1898','y':'858'}];   
+    var idss=[{'id':'state2','x':'135','y':'123'},{'id':'state3','x':'1069','y':'133'},{'id':'state1','x':'942','y':'135'},{'id':'state17','x':'24','y':'236'},{'id':'state18','x':'154','y':'277'},{'id':'label1','x':'388','y':'312'},{'id':'ph1','x':'451','y':'310'},{'id':'label2','x':'555','y':'311'},{'id':'ph2','x':'623','y':'308'},{'id':'label3','x':'760','y':'313'},{'id':'ph3','x':'822','y':'308'},{'id':'state4','x':'1152','y':'247'},{'id':'state16','x':'15','y':'360'},{'id':'state5','x':'1160','y':'377'},{'id':'state15','x':'24','y':'488'},{'id':'state6','x':'1158','y':'500'},{'id':'state14','x':'1066','y':'591'},{'id':'state13','x':'932','y':'595'},{'id':'state12','x':'802','y':'594'},{'id':'state11','x':'673','y':'591'},{'id':'state10','x':'541','y':'594'},{'id':'state9','x':'411','y':'595'},{'id':'state8','x':'269','y':'594'},{'id':'state7','x':'145','y':'592'}];
+	$(function(){
+    	/*part位置  */
+		 for(i in ids){
+			   document.getElementById(ids[i].id).style.left=ids[i].x+"px";
+			   document.getElementById(ids[i].id).style.top=ids[i].y+"px";
+			   //drag(ids[i].id);
+		   }
+		 for(i in idss){
+			   document.getElementById(idss[i].id).style.left=idss[i].x+"px";
+			   document.getElementById(idss[i].id).style.top=idss[i].y+"px";
+			   drag(idss[i].id);
+		   }
+			 myChart1= echarts.init(document.getElementById('chart1'));//最近七天产量
+			 myChart2= echarts.init(document.getElementById('chart2'));//水壳气密性
+			 myChart3= echarts.init(document.getElementById('chart3'));//油壳气密性
+			 myChart4= echarts.init(document.getElementById('chart4'));//累计停机时间(本周)
+			 myChart5= echarts.init(document.getElementById('chart5'));//累计停机时间(本月)
+			 getInfo();
+			 getAlarm(myChart4,myChart5);
+			 getSevenproduction();
+			 water();
+			 oil();     
+             getMonthproduct();
+             getWeekproduct();
+             getDayproduct();
+ 
+		
+	});
+   // 	获取设备状态
+    function getInfo(){
+		 getAjax("../khmk_mes/messtatus.bu?method=queryStatus", {}, function(data){
+			  if(data.ret==0){
+				  for(var i=1;i<=data.status.length;i++){
+					  if(data.status[i-1].status==0){
+					  	$(".state"+data.status[i-1].procedure_id).css("background","#5cb85c");
+					  }else if(data.status[i-1].status==1){
+						$(".state"+data.status[i-1].procedure_id).css("background","#D9534F");
+					  }else if(data.status[i-1].status==2){
+						$(".state"+data.status[i-1].procedure_id).css("background","#f0ad4e");
+					  }
+				  }
+			  }
+		 });
+		setTimeout("getInfo()",10000);
+	} 
+    function getAlarm(myChart4,myChart5){
+    	/* 获取工序,停机时间排序放入数组，并去掉0和空 */        
+        getAjax("../khmk_mes/bigscreen.bu?method=queryExamList", {}, function(data){
+        	var weekprocedurelist=new Array();//本周工序
+        	var weekdiftimelist=new Array();//本周累计停机时间
+        	var monthprocedurelist=new Array();//本月工序
+        	var monthdiftimelist=new Array();//本月累计停机时间
+        	var starttime=new Array();//开始时间
+        	var endtime=new Array();//结束时间 
+        	
+        	var procedurelist=new Array();//工序
+        	var diftimelist=new Array();//停机时间
+        	var st=new Array();//停机开始时间
+        	var et=new Array();//停机结束时间	
+        	var monthlongtime=0;//本月最长停机时间
+        	var weeklongtime=0;//本周最长停机时间
+        	var daylongtime=0;//本日最长停机时间
+        	var monthlongprocedure="";//本月最长停机时间的工序
+        	var weeklongprocedure="";//本周最长停机时间的工序
+        	var daylongprocedure="";//本日最长停机时间的工序
+      	 for (var i = 0; i < data.aaData.length+1; i++) {
+       		 weekdiftimelist[i]=0;
+       		 weekprocedurelist[i]=0;
+       		 monthdiftimelist[i]=0;
+       		 monthprocedurelist[i]=0;
+       		 diftimelist[i]=0;
+       		 procedurelist[i]=0;
+       		 starttime[i]=0;
+       		 endtime[i]=0;
+       		 st[i]=0;
+       		 et[i]=0;
+       		 
+      	 }
+      	 for (var i = 0; i < data.aaData.length; i++) {
+      		 procedurelist[i]=data.aaData[i].procedureName;
+      		 diftimelist[i]=data.aaData[i].difTime;
+      		 st[i]=data.aaData[i].startTime;
+      		 et[i]=data.aaData[i].endTime;
+      		 weekprocedurelist[data.aaData[i].procedureId]=data.aaData[i].procedureName;
+      		 monthprocedurelist[data.aaData[i].procedureId]=data.aaData[i].procedureName;
+      		 starttime[data.aaData[i].procedureId]=data.aaData[i].startTime;
+      		 endtime[data.aaData[i].procedureId]=data.aaData[i].endTime;
+      		 
+      		 /*将时间在本周的放入weekdiftimelist  */
+      		 if(checkTime(getWeekStartDate(),starttime[data.aaData[i].procedureId]) && checkTime(endtime[data.aaData[i].procedureId],getWeekEndDate())){
+	        		 if(data.aaData[i].difTime){
+	        		   weekdiftimelist[data.aaData[i].procedureId]=weekdiftimelist[data.aaData[i].procedureId]+data.aaData[i].difTime;
+	        		 }
+	        		 
+       		 }
+      		 
+      		 /*将时间在本月的放入monthdiftimelist  */
+      		 if(checkTime(getMonthStartDate(),starttime[data.aaData[i].procedureId]) && checkTime(endtime[data.aaData[i].procedureId],getMonthEndDate())){
+	        		 if(data.aaData[i].difTime){
+	        		   monthdiftimelist[data.aaData[i].procedureId]=monthdiftimelist[data.aaData[i].procedureId]+data.aaData[i].difTime;
+	        		 }
+      	     }	
+      	 }
+      	/* 删除本周数组中为0的项 */
+         for(var i=0,len=weekdiftimelist.length;i<len;i++){
+	    	  if(weekdiftimelist[i]==0){
+	    		  weekdiftimelist.splice(i,1);//删除数组中的某一项，i是下标,1是数量，如果diftimelist为0，则删除diftimelist中的某一项，并删除procedurelist中的对应项
+	    		  weekprocedurelist.splice(i,1);
+	    	      len--;
+	    	      i--;
+	        }
+        } 
+		  
+		   /*删除本月数组中为0的项  */
+         for(var i=0,len=monthdiftimelist.length;i<len;i++){
+	    	  if(monthdiftimelist[i]==0){
+	    		  monthdiftimelist.splice(i,1);//删除数组中的某一项，i是下标,1是数量，如果diftimelist为0，则删除diftimelist中的某一项，并删除procedurelist中的对应项
+	    		  monthprocedurelist.splice(i,1);
+	    	      len--;
+	    	      i--;
+ 	        }
+         }
+		   
+         for(var i=0,len=diftimelist.length;i<len;i++){
+	    	  if(diftimelist[i]==0){
+	    		  diftimelist.splice(i,1);//删除数组中的某一项，i是下标,1是数量，如果diftimelist为0，则删除diftimelist中的某一项，并删除procedurelist中的对应项
+	    		  procedurelist.splice(i,1);
+	    		  st.splice(i,1);
+	    		  et.splice(i,1);
+	    	      len--;
+	    	      i--;
+  	        }
+          } 
+         /*冒泡排序 */
+         var len=diftimelist.length,j,i;
+         var temp1,temp2,temp3,temp4;
+          for(i=0;i<len-1;i++){ 
+         	for(j=0;j<len-1;j++){
+         		if(diftimelist[j]<diftimelist[j+1]){
+         			temp1=diftimelist[j];
+         			diftimelist[j]=diftimelist[j+1];
+         			diftimelist[j+1]=temp1; 
+         			temp2=procedurelist[j];
+         			procedurelist[j]=procedurelist[j+1];
+         			procedurelist[j+1]=temp2;
+         			
+         			temp3=st[j];
+         			st[j]=st[j+1];
+         			st[j+1]=temp3;
+         			
+         			temp4=et[j];
+         			et[j]=et[j+1];
+         			et[j+1]=temp4; 
+         			
+         		}
+         	}
+          } 
+          /* 获取本月最长停机时间及工序 */
+          for(var i=0,len=diftimelist.length;i<len;i++){
+  	    	 if(checkTime(getMonthStartDate(),st[i]) && checkTime(et[i],getMonthEndDate())){
+  	    		 monthlongtime=diftimelist[i];
+  	    		 monthlongprocedure=procedurelist[i];
+  	    		 break;
+  	    	 }
+  	     } 
+          /* 获取本周最长停机时间及工序 */
+          for(var i=0,len=diftimelist.length;i<len;i++){
+	             if(checkTime(getWeekStartDate(),st[i]) && checkTime(et[i],getWeekEndDate())){
+	 	    		 weeklongtime=diftimelist[i];
+	 	    		 weeklongprocedure=procedurelist[i];
+	 	    		 break;
+	 	    	 }
+          }
+          /* 获取本日最长停机时间及工序 */
+          for(var i=0,len=diftimelist.length;i<len;i++){
+	 	    	if(checkTime(getDayStartDate(),st[i]) && checkTime(et[i],getDayEndDate())){
+		    		 daylongtime=diftimelist[i];
+		    		 daylongprocedure=procedurelist[i];
+		    		 break;
+		    	 }
+          }	
+          /* 最长停机时间 */              
+    	    var content6="";
+    		content6=
+    				"<tr><th></th><th>工位</th><th>故障时间    ( 分钟  )</th></tr>"
+    				+"<tr><td>月</td>"
+    				+"<td>"+monthlongprocedure+"</td>"
+    				+"<td>"+monthlongtime+"</td>"
+    				+"</tr>"
+    				+"<tr><td>周</td>"
+    				+"<td>"+weeklongprocedure+"</td>"
+  				+"<td>"+weeklongtime+"</td>"
+  				+"</tr>"
+  				+"<tr><td>日</td>"
+    				+"<td>"+daylongprocedure+"</td>"
+  				+"<td>"+daylongtime+"</td>"
+  				+"</tr>";    				
+    			    $("#table1").html(content6);
+      	var xdata4=weekprocedurelist;
+ 	    var ydata4=weekdiftimelist;
+ 	    var xdata5=monthprocedurelist;
+  	    var ydata5=monthdiftimelist;
+		option3={
+			     
+			     tooltip:{
+			       show:true,
+			       trigger:'axis',
+			       formatter:function(params){
+			         var relVal =params[0].name;
+			         relVal +=params[0].value;
+			         return relVal;
+			       },
+
+			       showDelay:0,
+			       hideDelay:50,
+			       transitionDuration:0,
+			       backgroundColor:'rgba(50,50,50,1)',
+			       borderColor:'#aaa',
+			       showContent: true,
+			       borderRadius:8,
+			       padding:10
+			     },
+			     
+			     axisPointer:{
+			       type:'line',
+			       axis:'auto'
+			     },
+			     legend:{
+			       data:['累计停机时间'],
+			       textStyle: {
+	                	fontSize:25,
+	                    color: '#fff'
+	                }
+			     },
+			     xAxis:{
+			       data:xdata4,
+			       axisLabel:{
+			        	textStyle:{
+			        		fontSize:10
+			        	}
+			        
+			        },
+			       axisLine: {
+			            lineStyle: {color: '#fff'},
+			            textStyle:{
+			        		fontSize:17
+			        	}
+			        }
+			     },
+			     yAxis:{axisLine: {
+			            lineStyle: {color: '#fff'}
+			        },
+			        name: '分钟',
+			        nameTextStyle:{
+		                fontSize: 20,           
+		            },
+			        axisLabel:{
+			        	textStyle:{
+			        		fontSize:16
+			        	}
+			        
+			        }},
+			     series:[{
+			       name:'累计停机时间',
+			       type:'bar',
+			       barMaxWidth:30,
+			       data:ydata4,
+			       
+			       itemStyle:{
+			         normal:{
+			           color:new echarts.graphic.LinearGradient(0,0,0.5,1,[{
+			             offset:0,
+			             color:'rgba(35,123,105,1)'
+			           },{
+			             offset:1,
+			             color:'rgba(103,237,210,.5)'
+			           }]),
+			           borderColor:'#23a5e2',
+			           borderWidth:2,
+			           barBorderRadius:[10,10,0,0],
+			           shadowColor:'rgba(168,225,226,0.5)',
+			           opacity:.6
+
+			         },
+			         emphasis:{
+			           color:new echarts.graphic.LinearGradient(0,0,0,1,[{
+			             offset:0,
+			             color:'rgba(13,164,171,1)'
+			           },{
+			             offset:1,
+			             color:'rgba(64,180,157,.1)'
+			           }]),
+			           borderColor:'#0ea4a6',
+			           borderWidth:2,
+			           barBorderRadius:[9,9,0,0],
+			           shadowBlur:30,
+			           shadowColor:'rgba(32,188 ,157,0.8)',
+			           opacity:.7,
+			           label:{
+			             show:true,
+			             textStyle:{
+			               color:'#fff',
+			               fontSize: 20
+			             }
+
+			           }
+			         }
+			       },
+			       markPoint:{
+			         symbol: 'circle',
+			         symbolSize:50,
+			         symbolOffset: [0,0],
+			         silent:true
+
+			       }
+
+			     }],
+			     label:{
+			       normal:{
+			         show:true,
+			         position:'top',
+			         textStyle:{
+			               color:'#fff',
+			               fontSize:16
+			             }
+
+			       }
+
+			     }
+
+			   };
+          option4={
+			     
+			     tooltip:{
+			       show:true,
+			       trigger:'axis',
+			       formatter:function(params){
+			         var relVal =params[0].name;
+			         relVal +=params[0].value;
+			         return relVal;
+			       },
+
+			       showDelay:0,
+			       hideDelay:50,
+			       transitionDuration:0,
+			       backgroundColor:'rgba(50,50,50,1)',
+			       borderColor:'#aaa',
+			       showContent: true,
+			       borderRadius:8,
+			       padding:10
+			     },
+			     
+			     axisPointer:{
+			       type:'line',
+			       axis:'auto'
+			     },
+			     legend:{
+			       data:['累计停机时间'],
+			       textStyle: {
+	                	fontSize:25,
+	                    color: '#fff'
+	                }
+			     },
+			     xAxis:{
+			       data:xdata5,
+			       axisLabel:{
+			        	textStyle:{
+			        		fontSize:10
+			        	}
+			        
+			        },
+			       axisLine: {
+			            lineStyle: {color: '#fff'},
+			            textStyle:{
+			        		fontSize:17
+			        	}
+			        }
+			     },
+			     yAxis:{axisLine: {
+			            lineStyle: {color: '#fff'}
+			        },
+			        name: '分钟',
+			        nameTextStyle:{
+		                fontSize: 20,           
+		            },
+			        axisLabel:{
+			        	textStyle:{
+			        		fontSize:16
+			        	}
+			        
+			        }},
+			     series:[{
+			       name:'累计停机时间',
+			       type:'bar',
+			       barMaxWidth:30,
+			       data:ydata5,
+			       
+			       itemStyle:{
+			         normal:{
+			           color:new echarts.graphic.LinearGradient(0,0,0.5,1,[{
+			             offset:0,
+			             color:'rgba(35,123,105,1)'
+			           },{
+			             offset:1,
+			             color:'rgba(103,237,210,.5)'
+			           }]),
+			           borderColor:'#23a5e2',
+			           borderWidth:2,
+			           barBorderRadius:[10,10,0,0],
+			           shadowColor:'rgba(168,225,226,0.5)',
+			           opacity:.6
+
+			         },
+			         emphasis:{
+			           color:new echarts.graphic.LinearGradient(0,0,0,1,[{
+			             offset:0,
+			             color:'rgba(13,164,171,1)'
+			           },{
+			             offset:1,
+			             color:'rgba(64,180,157,.1)'
+			           }]),
+			           borderColor:'#0ea4a6',
+			           borderWidth:2,
+			           barBorderRadius:[9,9,0,0],
+			           shadowBlur:30,
+			           shadowColor:'rgba(32,188 ,157,0.8)',
+			           opacity:.7,
+			           label:{
+			             show:true,
+			             textStyle:{
+			               color:'#fff',
+			               fontSize: 20
+			             }
+
+			           }
+			         }
+			       },
+			       markPoint:{
+			         symbol: 'circle',
+			         symbolSize:50,
+			         symbolOffset: [0,0],
+			         silent:true
+
+			       }
+
+			     }],
+			     label:{
+			       normal:{
+			         show:true,
+			         position:'top',
+			         textStyle:{
+			               color:'#fff',
+			               fontSize:16
+			             }
+
+			       }
+
+			     }
+
+			   };
+		
+		myChart4.setOption(option3);
+		myChart5.setOption(option4);
+	       }); 
+        setTimeout("getAlarm(myChart4,myChart5)",30000);
+    }
+    
+    function getMonthproduct(){
+    	/*获取月产量  */
+		 getAjax("../khmk_mes/bigscreen.bu?method=listMonthCount", {}, function(data){									
+			 var content1=data.list;
+			 $('#month_product').html(content1);
+	       }); 
+		 setTimeout("getMonthproduct()",30000);
+    }
+    function getWeekproduct(){
+	    /*获取周产量  */
+		  getAjax("../khmk_mes/bigscreen.bu?method=listWeekCount", {}, function(data){									
+				var content2=data.list;		
+			 $('#week_product').html(content2);
+	      });
+		  setTimeout("getWeekproduct()",30000);
+    }
+	 function getDayproduct(){
+		 /* 获取日产量 */
+		 getAjax("../khmk_mes/bigscreen.bu?method=listDayCount", {}, function(data){									
+				var content3=data.list;		
+			 $('#day_product').html(content3);
+	      });
+		 setTimeout("getDayproduct()",30000);
+	 }
+	 
+
+	 /*最近七天产量  */
+	 function getSevenproduction(){
+		 var xdata1=[];
+		 var ydata1=[];
+		 var x=null;
+// 		 $.ajax({
+// 				url:'../khmk_mes/bigscreen.bu?method=listRecentCount',
+// 				   type:'GET',
+// 				   dataType:"html",
+// 				   success:function(data){
+// 				   var jsonData = eval('('+data+')');
+// 				   for (var i=0;i<jsonData.list.length;i++){
+//  				    xdata1[i] =  jsonData.list[i].days;
+//  		    	    ydata1.push({name:xdata1[i], value: jsonData.list[i].count});
+// 		    	    } 
+// 				     alert(xdata1);
+// 					 alert(ydata1);
+// 					 xdata9=xdata1;
+// 					 ydata9=ydata9;
+// 				  }
+		 
+// 		 });
+         getAjax("../khmk_mes/bigscreen.bu?method=listRecentCount", {}, function(data){
+        	   var jsonData = eval('('+data+')');
+        	   
+			   for (var i=0;i<jsonData.list.length;i++){
+			    xdata1[i] =  jsonData.list[i].days;
+	    	    ydata1.push({name:xdata1[i], value: jsonData.list[i].count});
+	    	    } 	
+             x=3;
+	       });
+		  alert(xdata1);
+		  alert(ydata1);
+		  alert(3);
+		  seven_product(xdata1,ydata1);
+		  myChart1.setOption(option5);
+		 setTimeout("getSevenproduction()",30000)
+	 }
+	 /*水壳气密性  */
+	 function water(){
+		    var xdata2=[];
+			var ydata2=[];
+			var passpercent=null;
+			var nopasspercent=null;
+			var pass=null;
+			var nopass=null;
+			var ipass=null;
+			var inopass=null;
+		 getAjax("../khmk_mes/bigscreen.bu?method=queryUpQuantity", {meas_id:2}, function(data){
+			    pass=data.list;
+			    ipass=parseInt(pass); 			    
+	       });
+		getAjax("../khmk_mes/bigscreen.bu?method=querydownQuantity", {meas_id:2}, function(data){									
+			  nopass=data.list;
+			  inopass=parseInt(nopass);			 
+	       });
+		passpercent=(ipass/(ipass+inopass)*100).toFixed(2).toString();
+ 		nopasspercent=(inopass/(ipass+inopass)*100).toFixed(2).toString();
+ 		xdata2=[passpercent,nopasspercent];
+ 		ydata2=[pass,nopass];
+ 		pass_test(xdata2,ydata2);
+ 		myChart2.setOption(option2);
+		setTimeout("water()",30000);
+	 }
+	 /* 油壳气密性 */
+	 function oil(){
+		    var xdata3=[];
+			var ydata3=[];
+			var passpercent2=null;
+			var nopasspercent2=null;
+			var pass2=null;
+			var nopass2=null;
+			var ipass2=null;
+			var inopass2=null;
+		 getAjax("../khmk_mes/bigscreen.bu?method=queryUpQuantity", {meas_id:1}, function(data){									
+			  pass2=data.list;
+			  ipass2=parseInt(pass2);
+			 
+	       });
+		getAjax("../khmk_mes/bigscreen.bu?method=querydownQuantity", {meas_id:1}, function(data){									
+			  nopass2=data.list;
+			  inopass2=parseInt(nopass2);
+			 
+	       });
+		passpercent2=(ipass2/(ipass2+inopass2)*100).toFixed(2).toString();
+ 		nopasspercent2=(inopass2/(ipass2+inopass2)*100).toFixed(2).toString();
+ 		xdata3=[passpercent2,nopasspercent2];
+ 		ydata3=[pass2,nopass2];
+ 		pass_test(xdata3,ydata3);
+ 		myChart3.setOption(option2);
+		setTimeout("oil()",30000);
+	 }
+    function replaceZeroItem(arr){
+  	  for(var i=0,len=arr.length;i<len;i++){
+	    	  if(arr[i]==0){
+	    	  arr.splice(i,1);
+	    	  len--;
+	    	  i--;
+  	   }
+  	  }
+  	}
+    /* 去掉数组中的空项 */
+    function replaceEmptyItem(arr){
+    	  for(var i=0,len=arr.length;i<len;i++){
+	    	  if(!arr[i]|| arr[i]==''){
+	    	  arr.splice(i,1);
+	    	  len--;
+	    	  i--;
+    	   }
+    	  }
+    	}
+  //格局化日期：yyyy-MM-dd 
+	function formatDate(date) { 
+		var myyear = date.getFullYear(); 
+		var mymonth = date.getMonth()+1; 
+		var myweekday = date.getDate(); 
+
+		if(mymonth < 10){ 
+		mymonth = "0" + mymonth; 
+		} 
+		if(myweekday < 10){ 
+		myweekday = "0" + myweekday; 
+		} 
+		return (myyear+"-"+mymonth + "-" + myweekday); 
+		}
+	//获得某月的天数 
+	function getMonthDays(myMonth){ 
+		var monthStartDate = new Date(nowYear, myMonth, 1); 
+		var monthEndDate = new Date(nowYear, myMonth + 1, 1); 
+		var days = (monthEndDate - monthStartDate)/(1000 * 60 * 60 * 24); 
+		return days; 
+	} 
+	/* 比较两个时间大小 */
+	function checkTime(firsttime,secondtime){  
+	    var first=new Date(firsttime.replace("-", "/").replace("-", "/"));  
+	    var second=new Date(secondtime.replace("-", "/").replace("-", "/"));  
+	    if(first<second){  
+	        return true;  
+	    }  
+	    return false;  
+	}  
+	/* 获取本周开始时间 */
+	function getWeekStartDate() { 
+		var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek); 
+		return formatDate(weekStartDate)+" "+"00"+":"+"00"+":"+"00"; 
+		}
+	/* 获取本周结束时间 */
+	function getWeekEndDate() { 
+		var weekEndDate = new Date(nowYear, nowMonth, nowDay + (6 - nowDayOfWeek)); 
+		return formatDate(weekEndDate)+" "+"23"+":"+"59"+":"+"59";	 
+       }
+	/* 获得本月的开端日期  */
+	function getMonthStartDate(){ 
+		var monthStartDate = new Date(nowYear, nowMonth, 1); 
+		return formatDate(monthStartDate)+" "+"00"+":"+"00"+":"+"00"; 
+	} 
+	/* 获得本月的停止日期  */
+	function getMonthEndDate(){ 
+		var monthEndDate = new Date(nowYear, nowMonth, getMonthDays(nowMonth)); 
+		return formatDate(monthEndDate)+" "+"23"+":"+"59"+":"+"59"; 
+	} 
+	/* 获取本日的开始时间 */
+	function getDayStartDate(){
+		var dayStartDate=new Date(nowYear, nowMonth, nowDay);
+		return formatDate(dayStartDate)+" "+"00"+":"+"00"+":"+"00";
+	}
+	/* 获取本日的结束时间 */
+	function getDayEndDate(){
+		var dayEndDate=new Date(nowYear, nowMonth, nowDay);
+		return formatDate(dayEndDate)+" "+"23"+":"+"59"+":"+"59";
+	}
+
+     
+	  function  drag(id) { //实现拖拽
+	        var tdiv = document.getElementById(id);  
+         tdiv.onmousedown = function(e) {  
+	            var e = e || window.event; //兼容ie浏览器  
+	            var diffX = e.clientX - tdiv.offsetLeft; //鼠标点击物体那一刻相对于物体左侧边框的距离=点击时的位置相对于浏览器最左边的距离-物体左边框相对于浏览器最左边的距离  
+	            var diffY = e.clientY - tdiv.offsetTop;  
+	            if(typeof tdiv.setCapture!='undefined'){  
+	                 tdiv.setCapture();  
+	            }  		      
+	            document.onmousemove = function(e) {  
+	                var e = e || window.event; //兼容ie浏览器  
+	                var left=e.clientX-diffX;  
+	                var top=e.clientY-diffY;  		      
+	                //控制拖拽物体的范围只能在浏览器视窗内，不允许出现滚动条  
+	                if(left<0){  
+	                    left=0;  
+	                }else if(left >window.innerWidth-tdiv.offsetWidth){  
+	                    left = window.innerWidth-tdiv.offsetWidth;  
+	                }  
+	                if(top<0){  
+	                    top=0;  
+	                }else if(top >window.innerHeight-tdiv.offsetHeight){  
+	                    top = window.innerHeight-tdiv.offsetHeight;  
+	                }  		      
+	                //移动时重新得到物体的距离，解决拖动时出现晃动的现象  
+	                tdiv.style.left = left+ 'px';  
+	                tdiv.style.top = top + 'px';  
+	            };  
+	            document.onmouseup = function(e) { 		        
+	                this.onmousemove = null;  
+	                this.onmouseup = null; //预防鼠标弹起来后还会循环（即预防鼠标放上去的时候还会移动）  		     
+	                if(typeof tdiv.releaseCapture!='undefined'){  
+	                	tdiv.releaseCapture();  
+	                }  
+	            };  
+	        };  
+	 }; 
+	 
+	 /* 获取各模块位置 */
+ 	 $("#btn1").on("click", function(e){
+		 var e = e || window.event;		 
+			 var cls="";
+			 $("div").each(function(){
+				 cls+="{'id':'"+this.id+"','x':'"+this.offsetLeft+"','y':'"+this.offsetTop+"'},";
+			 }); 
+			 console.log(cls);
+	 });   
+	 
+     /*最近七天产量  */
+     function seven_product(xdata1,ydata1){
+    	 option5={
+					color: ['#6CF5F2'],
+					
+				    tooltip: {
+				        trigger: 'axis',
+				        
+				    },
+				    
+				    grid: {
+				        containLabel: true
+				    },
+				    legend: {
+				        data: ['产量'],
+				        textStyle: {
+		                	fontSize: 25,
+		                    color: '#fff'
+		                }
+				        
+				    },
+				    xAxis: [{
+				        type: 'category',		        
+				        axisTick: {
+				            alignWithLabel: true
+				        },
+				        name: '天',
+				        nameTextStyle:{
+			                fontSize: 20,           
+			            },
+				        axisLine: {
+				            lineStyle: {color: '#fff'}
+				        },
+				        axisLabel:{
+				        	formatter: '{value} ',
+				        	textStyle:{
+				        		fontSize:20
+				        	}
+				        
+				        },
+				        data: xdata1
+				    }],
+				    yAxis: [{
+				        type: 'value',
+				        name: '产量(个)',
+				        nameTextStyle:{
+			                fontSize: 20,           
+			            },
+				        /* min: 0,
+				        max: 1000, */
+				        position: 'left',
+				        splitLine: {
+				            show: true,
+				            lineStyle: {color: '#fff'}
+				        },
+				        
+				        axisLabel: {
+				            formatter: '{value} ',
+				            textStyle:{
+				        		fontSize:20
+				        	}
+				        },
+				        axisLine: {
+						            lineStyle: {color: '#fff'}
+						        }
+				    }],
+				    series: [{
+				        name: '产量',
+				        type: 'line',
+				        stack: '总量',
+				            label: {
+				                normal: {
+				                    show: true,
+				                    position: 'top',
+				                    textStyle:{
+						        		fontSize:16
+						        	}
+				                }
+				            },
+				        lineStyle: {
+				                normal: {
+				                    width: 4,
+				                    shadowColor: 'rgba(0,0,0,0.4)',
+				                    shadowBlur: 10,
+				                    shadowOffsetY: 10
+				                }
+				            },
+				        data: ydata1
+				    }]
+				};
+     }
+	 
+	 /*油壳气密性，水壳气密性检测合格率  */
+	function pass_test(xdata2,ydata2){
+		option2={
+				grid: {
+			        containLabel: true
+			    },
+			    series: [{
+			        type: 'pie',
+			        radius: ['35%', '55%'],
+			        silent: true,
+			        data: [{
+			            value: 1,
+			            itemStyle: {
+			                normal: {
+			                    color: '#050f58',
+			                    borderColor: '#162abb',
+			                    borderWidth: 2,
+			                    shadowBlur: 50,
+			                    shadowColor: 'rgba(21,41,185,.75)'
+			                }
+			            }
+			        }]
+			    }, {
+			        type: 'pie',
+			        radius: ['35%', '55%'],
+			        silent: true,
+			        label: {
+			            normal: {
+			                show: false,
+			            }
+			        },
+			        data: [{
+			            value: 1,
+			            itemStyle: {
+			                normal: {
+			                    color: '#050f58',
+			                    shadowBlur: 50,
+			                    shadowColor: 'rgba(21,41,185,.75)'
+			                }
+			            }
+			        }]
+			    }, {
+			        name: '占比',
+			        type: 'pie',
+			        radius: ['39%', '52%'],
+			        hoverAnimation: false,
+
+			        data: [{
+			            value: xdata2[0],
+			            name: "合格",
+			            itemStyle: {
+			                normal: {
+			                    label: {
+			                        show: true,
+			                        textStyle: {
+			                            fontSize: 25,
+			                            fontWeight: "bold"
+			                        },
+			                        position: "center"
+			                    },
+			                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+			                        offset: 0,
+			                        color: 'rgba(5,193,255,1)'
+			                    }, {
+			                        offset: 1,
+			                        color: 'rgba(15,15,90,1)'
+			                    }])
+			                }
+			            },
+			            label: {
+			                normal: {
+			                    position: 'outside',
+			                    textStyle: {
+			                        color: '#fff',
+			                        fontSize: 20
+			                    },
+			                    formatter: '{b}: '+ydata2[0]+'\n\n{a}: {c}%'
+			                }
+			            },
+			            labelLine: {
+			                normal: {
+			                    show: true,
+			                    length: 10,
+			                    length2: 20,
+			                    smooth: false,
+			                    lineStyle: {
+			                        width: 1,
+			                        color: "#2141b5"
+			                    }
+			                }
+			            }
+			        }, {
+			            value:xdata2[1],
+			            name: "不合格",
+			            itemStyle: {
+			                normal: {
+			                    label: {
+			                        show: true,
+			                        textStyle: {
+			                            fontSize: 15,
+			                            fontWeight: "bold"
+			                        },
+			                        position: "center"
+			                    },
+			                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+			                        offset: 0,
+			                        color: 'rgba(5,15,88,1)'
+			                    }, {
+			                        offset: 1,
+			                        color: 'rgba(235,122,255,1)'
+			                    }])
+			                }
+			            },
+			            label: {
+			                normal: {
+			                    position: 'outside',
+			                    textStyle: {
+			                        color: '#fff',
+			                        fontSize: 20
+			                    },
+			                    formatter: '{b}: '+ydata2[1]+'\n\n{a}: {c}%'
+			                }
+			            },
+			            labelLine: {
+			                normal: {
+			                    show: true,
+			                    length: 10,
+			                    length2: 20,
+			                    smooth: false,
+			                    lineStyle: {
+			                        width: 1,
+			                        color: "#2141b5"
+			                    }
+			                }
+			            }
+			        }]
+			    }, {
+			        name: '',
+			        type: 'pie',
+			        clockWise: true,
+			        hoverAnimation: false,
+			        radius: [100, 100],
+			        label: {
+			            normal: {
+			                position: 'center'
+			            }
+			        },
+			        data: [{
+			            value: 0,	            
+			        }]
+			    }]
+			};
+
+		
+	}
+	 
+</script>
+</body>
+</html>
